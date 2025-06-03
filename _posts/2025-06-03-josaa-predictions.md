@@ -118,8 +118,8 @@ The `predict.py` script orchestrates the generation of closing rank predictions 
 *   **Inverse Transformation**: The model's predictions are initially in a scaled format, and categorical identifiers are one-hot encoded. To make them human-readable:
     *   The `scaler` object's `inverse_transform` method is used to convert the scaled `closing_rank` predictions back to their original rank values. This requires constructing a dummy DataFrame with the same structure as the data used to fit the scaler, placing the predicted scaled values in the correct column, and then applying the inverse transformation.
     *   The `encoder` object's `inverse_transform` method is used to convert the one-hot encoded college and program features back to their original string representations.
-*   **Reporting**: The final, human-readable predictions, along with the last known historical final ranks for comparative analysis, are compiled into a pandas DataFrame. This DataFrame is then sorted by the `predicted_closing_rank` in ascending order and saved to a CSV file named `prediction_report.csv`.
-    Here's a glimpse of what `prediction_report.csv` might contain:
+*   **Reporting**: The final, human-readable predictions, along with the last known historical final ranks for comparative analysis, are compiled into a pandas DataFrame. This DataFrame is then sorted by the `predicted_closing_rank` in ascending order and saved to a [CSV file](https://github.com/pponnada/josaa-rank-predictor/blob/main/prediction_report.csv) named `prediction_report.csv`.
+Here's a glimpse of what `prediction_report.csv` might contain:
 
 ```csv
 college_name,academic_program_name,year,round,historical_final_closing_rank,predicted_closing_rank
