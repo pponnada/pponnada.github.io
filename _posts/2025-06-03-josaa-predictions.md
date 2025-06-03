@@ -1,11 +1,15 @@
 ---
-layout: default
+layout: post
 title: JOSAA Rank Prediction Engine - A Technical Walkthrough
+tags: - josaa
+      - rank seat prediction
+      - jee mains ranks
+      - time series models
 ---
 
 # JOSAA Rank Prediction Engine: A Technical Walkthrough
 
-This post walks through the development of a system designed to predict college admission closing ranks for the Joint Seat Allocation Authority (JoSAA) counselling process. Our main goal is to use historical data and machine learning to predict these ranks, offering students a data-driven look at potential admission outcomes.
+This post walks through the development of a system designed to predict college admission closing ranks for [the Joint Seat Allocation Authority (JoSAA)](https://josaa.admissions.nic.in/applicant/seatmatrix/openingclosingrankarchieve.aspx) counselling process. Our main goal is to use historical data and machine learning to predict these ranks, offering students a data-driven look at potential admission outcomes.
 
 **Disclaimer:**
 It's important to note that this JOSAA Rank Predictor is an experimental project, primarily for educational and illustrative purposes. The predictions are based on statistical models and historical data, so they aren't guaranteed to be spot-on. Always cross-reference with official JoSAA resources or consult advisors before making decisions based on these predictions.
@@ -15,6 +19,19 @@ The core technical challenge was to build a model that could predict the closing
 
 **Access the Code:**
 The complete codebase for this project is open-source and available on GitHub: [https://github.com/pponnada/josaa-rank-predictor](https://github.com/pponnada/josaa-rank-predictor)
+
+## Table of Contents
+1.  [System Architecture and Pipeline](#system-architecture-and-pipeline)
+    1.  [Data Acquisition](#1-data-acquisition)
+    2.  [Data Storage and Structuring (`build_db.py`)](#2-data-storage-and-structuring-build_dbpy)
+    3.  Initial Feature Engineering (`query.sql`)
+    4.  Data Preprocessing (`preprocess.py`)
+    5.  Advanced Feature Engineering (`feature_engineering.py`)
+    6.  Model Training and Evaluation (`train_model.py`)
+    7.  Prediction Pipeline (`predict.py`)
+2.  Conclusion
+
+
 
 ## System Architecture and Pipeline
 
@@ -32,7 +49,7 @@ Indian Institute of Technology Bhubaneswar#Civil Engineering and M. Tech. in Str
 Indian Institute of Technology Bhubaneswar#Civil Engineering and M. Tech. in Structural Engineering (5 Years, Bachelor and Master of Technology (Dual Degree))#AI#OPEN#Female-only (including Supernumerary)#15881#15881
 ```
 
-### 2. Data Storage and Structuring (`build_db.py`)
+### 2. Data Storage and Structuring 
 Raw data scraped from JoSAA, typically in CSV files, gets consolidated into a SQLite database by the `build_db.py` script. This gives us a structured, queryable SQL-based repository for all historical data, with the schema defined in `schema.sql`. This structured approach is key for efficient data handling later on.
 The `build_db.py` script handles a few key tasks:
 *   **Schema Definition**: First, it sets up the database structure (tables, columns, data types, relationships) by running the DDL commands from `schema.sql`.
@@ -40,7 +57,7 @@ The `build_db.py` script handles a few key tasks:
 *   **Data Transformation and Loading**: The script parses this data, performs necessary cleaning, and loads it into the corresponding SQLite tables. This step is crucial for centralizing all historical rank data, ensuring consistent formatting, and making it easily queryable.
 Essentially, `build_db.py` builds the data foundation needed for efficient feature engineering and model training down the line.
 
-### 3. Initial Feature Engineering (`query.sql`)
+### 3. Initial Feature Engineering 
 Next, a fairly comprehensive SQL query (`query.sql`) runs against the SQLite database. Its job is to pull relevant data and create some initial features. We focused this query on 'OPEN' seat types, 'Gender-Neutral' categories, and 'AI'/'OS' quotas, specifically for non-IIT institutes, as these represent a common use case. The key features engineered here aim to capture trends over time and relative rank positions. These include:
 
 *   `prev_year_closing_rank`: The closing rank for the same college/branch combination from the previous year.
@@ -71,7 +88,7 @@ year,round,opening_rank,closing_rank,prev_year_closing_rank,delta_closing_rank_1
 2020,4,46576.0,58773.0,,,58773.0,0,4801.0,20.3970009832842,56929.0,,"Assam University, Silchar","Agricultural Engineering (4 Years, Bachelor of Technology)"
 ```
 
-### 4. Data Preprocessing (`preprocess.py`)
+### 4. Data Preprocessing 
 The `historical_data.csv` (output from the SQL query) then goes through several preprocessing steps in `preprocess.py` – these are pretty standard but crucial for getting the data ready for an ML model:
 
 *   **Missing Value Imputation**: Null values, particularly for historical rank features (e.g., `prev_year_closing_rank` for the earliest year in the dataset), are handled using appropriate imputation strategies.
@@ -80,10 +97,10 @@ The `historical_data.csv` (output from the SQL query) then goes through several 
 
 The preprocessed dataset is then saved as `preprocessed_data.csv`.
 
-### 5. Advanced Feature Engineering (`feature_engineering.py`)
+### 5. Advanced Feature Engineering 
 The `feature_engineering.py` script ingests `preprocessed_data.csv` to perform further feature transformations or selection. This stage is intended to derive more sophisticated features that might capture more complex relationships in the data, potentially improving model performance. The final feature set for model training is exported as `feature_engineered_data.csv`.
 
-### 6. Model Training and Evaluation (`train_model.py`)
+### 6. Model Training and Evaluation
 The `feature_engineered_data.csv` serves as input to the `train_model.py` script for model development:
 
 *   **Data Splitting**: The dataset is partitioned into training and testing subsets. This allows the model to be trained on one portion of the data and evaluated on unseen data (the test set) to provide an unbiased assessment of its generalization capabilities.
@@ -91,7 +108,7 @@ The `feature_engineered_data.csv` serves as input to the `train_model.py` script
 *   **Model Selection & Training**: A `RandomForestRegressor` is employed for this regression task. Random Forests are ensemble learning methods that construct multiple decision trees during training and output the mean prediction of the individual trees, which generally improves predictive accuracy and controls over-fitting. The model is trained on the training subset to learn the mapping from input features to the target variable (`closing_rank`).
 *   **Persistence**: The trained model object is serialized using `pickle` and saved to `josaa_model.pkl`. This allows the trained model to be reloaded and used for predictions without retraining.
 
-### 7. Prediction Pipeline (`predict.py`)
+### 7. Prediction Pipeline 
 The `predict.py` script orchestrates the generation of closing rank predictions for a target year (e.g., 2025, Round 6):
 
 *   **Artifact Loading**: It loads the persisted model (`josaa_model.pkl`), scaler (`scaler.pkl`), and one-hot encoder (`encoder.pkl`) that were saved during the preprocessing and training phases.
