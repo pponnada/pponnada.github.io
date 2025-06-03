@@ -1,7 +1,8 @@
 ---
 layout: post
 title: JOSAA Rank Prediction Engine - A Technical Walkthrough
-tags: - josaa
+tags: 
+      - josaa
       - rank seat prediction
       - jee mains ranks
       - time series models
