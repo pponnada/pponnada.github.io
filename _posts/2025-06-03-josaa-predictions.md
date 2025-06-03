@@ -24,13 +24,13 @@ The complete codebase for this project is open-source and available on GitHub: [
 ## Table of Contents
 1.  [System Architecture and Pipeline](#system-architecture-and-pipeline)
     1.  [Data Acquisition](#1-data-acquisition)
-    2.  [Data Storage and Structuring](#2-data-storage-and-structuring-build_dbpy)
-    3.  [Initial Feature Engineering] (#3-initial-feature-engineering)
-    4.  [Data Preprocessing] (#4-data-preprocessing)
-    5.  [Advanced Feature Engineering](#5-advanced-feature-engineering-feature_engineering)  
-    6.  [Model Training and Evaluation](#6-model-training-and-evaluation-train_model)
-    7.  [Prediction Pipeline](#7-prediction-pipeline-predict)
-2.  [Conclusion](#8-conclusion)
+    2.  [Data Storage and Structuring](#2-data-storage-and-structuring)
+    3.  [Initial Feature Engineering](#3-initial-feature-engineering)
+    4.  [Data Preprocessing](#4-data-preprocessing)
+    5.  [Advanced Feature Engineering](#5-advanced-feature-engineering)  
+    6.  [Model Training and Evaluation](#6-model-training-and-evaluation)
+    7.  [Prediction Pipeline](#7-prediction-pipeline)
+2.  [Conclusion](#conclusion)
 
 
 
