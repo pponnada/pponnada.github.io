@@ -66,7 +66,7 @@ Next, a fairly comprehensive SQL query (`query.sql`) runs against the SQLite dat
     *   **Why**: Captures the immediate trend (e.g., is this program becoming more or less competitive?). A large positive or negative delta can signal shifting demand.
 *   `delta_closing_rank_2yr_avg`: Change in closing rank compared to the average of the last two years.
     *   **Why**: Smooths out single-year anomalies and provides a more stable measure of the recent trend direction and magnitude.
-*   `is_final_round`: A binary indicator (0 or 1) to denote if a particular entry is from the final counselling round for that year.
+*   `is_final_round`: A binary indicator (0 or 1) to denote if a particular entry is from the final counselling round for that year. Some years have 5 rounds while others have 6.
     *   **Why**: Closing ranks can vary significantly between rounds. This feature helps the model distinguish between intermediate round data and the final admission cutoffs, which are typically the target for prediction.
 *   `round_relative_rank_diff`: Difference in closing rank compared to the previous round in the same year.
     *   **Why**: Indicates the volatility or stability of ranks within a single admission cycle. Large differences might suggest significant seat filling or withdrawals between rounds.
